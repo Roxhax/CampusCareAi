@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CampusCare AI | Support Portal</title>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Custom Premium Stylesheet -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- SECURE PORTAL LOGIN -->
+    <div id="loginOverlay">
+        <div class="login-card">
+            <div class="sidebar-brand" style="justify-content: center; margin-bottom: 24px;">
+                <i class="fas fa-shield-cat fa-2x"></i>
+                <span>CampusCare AI</span>
+            </div>
+            <h1>Secure Portal</h1>
+            <p>Institutional Login Services</p>
+            
+            <div class="input-group">
+                <label for="role">Select Portal Role</label>
+                <select id="role">
+                    <option value="student">Student Portal</option>
+                    <option value="admin">Administrator Panel</option>
+                </select>
+            </div>
+            
+            <div class="input-group">
+                <label for="username">User Authorization ID</label>
+                <input type="text" id="username" placeholder="Enter Username or Student ID">
+            </div>
+            
+            <button class="btn-primary" onclick="handleLogin()">
+                <i class="fas fa-key"></i> Authorize Session
+            </button>
+        </div>
+    </div>
+
+    <!-- MAIN SIDEBAR NAVIGATION -->
+    <aside class="sidebar hidden" id="mainSidebar">
+        <div class="sidebar-brand">
+            <i class="fas fa-shield-cat"></i>
+            <span>CampusCare</span>
+        </div>
+        <nav style="display: flex; flex-direction: column; height: 100%;">
+            <div class="nav-link active" onclick="showSection('studentDash')">
+                <i class="fas fa-plus-square"></i> <span>Request Support</span>
+            </div>
+            <div class="nav-link hidden" onclick="showSection('adminDash')" id="adminLink">
+                <i class="fas fa-chart-line"></i> <span>Admin Console</span>
+            </div>
+            <div class="nav-link" onclick="location.reload()" style="margin-top: auto;">
+                <i class="fas fa-power-off"></i> <span>Sign Out</span>
+            </div>
+        </nav>
+    </aside>
+
+    <!-- MAIN INTERFACE PAGE CONTAINER -->
+    <main class="main-content hidden" id="mainContent">
+        <header class="header-section">
+            <div>
+                <h2 id="welcomeMsg">Systems Online</h2>
+                <p id="subMsg">Manage your campus experience.</p>
+            </div>
+            <div id="dateTime"></div>
+        </header>
+
+        <!-- STUDENT DASHBOARD -->
+        <section id="studentDash">
+            <div class="grid-layout">
+                <!-- Left Column: Submit Ticket Form -->
+                <div class="left-col">
+                    <div class="card">
+                        <h3><i class="fas fa-pen-nib"></i> New Support Ticket</h3>
+                        
+                        <div class="input-group">
+                            <label for="title">Issue Subject</label>
+                            <input type="text" id="title" placeholder="e.g., Chemistry Lab Equipment Failure or Hostel Wifi Outage">
+                        </div>
+                        
+                        <div class="grid-layout" style="grid-template-columns: 1fr 1.2fr; margin-bottom: 20px; gap: 16px;">
+                            <div class="input-group" style="margin-bottom: 0;">
+                                <label for="priority">Priority Level</label>
+                                <select id="priority">
+                                    <option value="Low">Low Priority</option>
+                                    <option value="Medium" selected>Medium Priority</option>
+                                    <option value="High">High Priority</option>
+                                </select>
+                            </div>
+                            <div class="input-group" style="margin-bottom: 0;">
+                                <label for="image">Attachment (Optional)</label>
+                                <input type="file" id="image" accept="image/*">
+                            </div>
+                        </div>
+                        
+                        <div class="input-group">
+                            <label for="desc">Detailed Description</label>
+                            <textarea id="desc" rows="6" placeholder="Provide details like location, room number, or specific device identifiers..."></textarea>
+                        </div>
+                        
+                        <button class="btn-primary" id="submitBtn">
+                            <i class="fas fa-paper-plane"></i> Initialize Ticket
+                        </button>
+                        
+                        <div id="cid"></div>
+                    </div>
+                </div>
+
+                <!-- Right Column: Verification & FAQ -->
+                <div class="right-col">
+                    <!-- Ticket Status Tracker -->
+                    <div class="card">
+                        <h3><i class="fas fa-fingerprint"></i> Track Reference</h3>
+                        <div class="input-group">
+                            <label for="trackId">Enter Ticket ID</label>
+                            <input type="text" id="trackId" placeholder="CC-XXXXXX">
+                        </div>
+                        <button class="btn-primary" style="background: rgba(255, 255, 255, 0.05); border: 1px solid var(--glass-border); color: var(--text-main);" onclick="trackComplaint()">
+                            <i class="fas fa-search-location"></i> Verify Status
+                        </button>
+                        <div id="trackResult" style="margin-top: 15px;"></div>
+                    </div>
+                    
+                    <!-- AI Info Notice Card -->
+                    <div class="card" style="border-left: 4px solid var(--primary); background: linear-gradient(135deg, rgba(99, 102, 241, 0.08) 0%, rgba(30, 41, 59, 0.3) 100%);">
+                        <h3><i class="fas fa-robot"></i> AI Instant Support</h3>
+                        <p style="font-size: 0.85rem; color: var(--text-dim); line-height: 1.5; margin-bottom: 12px;">
+                            Need instant help? Ask our virtual campus guide about academic policies, housing rules, grading scales, or campus directions.
+                        </p>
+                        <p style="font-size: 0.85rem; color: var(--text-dim); line-height: 1.5;">
+                            Click the chat bubble in the bottom right corner to start a conversation anytime.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ADMIN DASHBOARD CONSOLE -->
+        <section id="adminDash" class="hidden">
+            <!-- Numerical Metrics Stats -->
+            <div class="admin-stats">
+                <div class="stat-item">
+                    <h4 id="statTotal">0</h4>
+                    <p>Total Complaints</p>
+                </div>
+                <div class="stat-item" style="border-left: 2px solid rgba(245, 158, 11, 0.15);">
+                    <h4 id="statPending" style="color: var(--warning);">0</h4>
+                    <p>Pending Review</p>
+                </div>
+                <div class="stat-item" style="border-left: 2px solid rgba(16, 185, 129, 0.15);">
+                    <h4 id="statSolved" style="color: var(--success);">0</h4>
+                    <p>Resolved Cases</p>
+                </div>
+            </div>
+
+            <!-- Tickets Database List -->
+            <div class="card">
+                <h3 style="margin-bottom: 20px;"><i class="fas fa-list-ul"></i> Support Tickets Database</h3>
+                <div class="search-bar">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="adminSearch" placeholder="Search database by Ticket ID or Subject..." onkeyup="filterTickets()">
+                </div>
+                <div class="table-container">
+                    <table id="adminTable">
+                        <thead>
+                            <tr>
+                                <th>Date Filed</th>
+                                <th>Ticket ID</th>
+                                <th>Subject</th>
+                                <th>Status Badge</th>
+                                <th>Actions Console</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- TICKET DETAIL DIALOG MODAL -->
+    <div id="descModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal()"><i class="fas fa-times"></i></span>
+            <h2 id="modalTitle" style="color: var(--text-main);">Ticket Review</h2>
+            <hr style="opacity: 0.08; margin: 20px 0;">
+            <div id="modalBody">
+                <p id="modalDesc"></p>
+                <div id="modalMeta"></div>
+                <img id="modalImage" src="" alt="Support attachment thumbnail" style="display: none;">
+            </div>
+        </div>
+    </div>
+
+    <!-- DIALOGFLOW WIDGET INTEGRATION -->
+    <script src="https://www.gstatic.com/dialogflow-console/fast/messenger/bootstrap.js?v=1"></script>
+    <df-messenger
+      intent="WELCOME"
+      chat-title="CampusCare AI Guide"
+      agent-id="a7d0f007-62a1-4797-9ab2-ce75e8838518"
+      language-code="en"
+    ></df-messenger>
+
+    <!-- Custom Premium Portal Logic -->
+    <script src="script.js"></script>
+</body>
+</html>
