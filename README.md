@@ -259,6 +259,9 @@ git push origin feature-name
 ---
 
 ## 👨‍💻 Author
+**Rochan M**
+
+GitHub: https://github.com/Roxhax
 
 **Yeswanth S**
 
